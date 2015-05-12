@@ -25,19 +25,32 @@ class SamplingBasedFittedValueIteration(object):
         self.n_actions = n_actions
         self.n_targets = n_targets
 
+        # initialize theta = 0
+        self.theta = np.zeros(self.state_init.dim)
+
     def fit(self):
         # randomly sample m states
-        sample_states = self.env_init.sampling_states(self.m)  # TODO
+        # TODO: use the sampling method from env
+        sample_states = self.env_init.sampling_states(self.m)
 
-        # initialize theta = 0
-        theta = np.zeros(self.state_init.dim)
-
+        y = []
         for i in range(self.n_states):
+            state_current = sample_states[i]
             for j in range(self.n_actions):
                 action = rand_circle(radius=1.5)
+                q = 0
+                y.append(0)
+                for k in range(self.n_targets):
+                    # TODO: overload the __add__ operator of the State class
+                    state_next = state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]])
+                    q += self.env.get_reward(state_current) + self.env.gamma * self.get_value(state_next)
+                q /= k
+                y[i] = q if q > y[i] else y[i]
+        # TODO: implement the linear regression here
+        # self.theta <- linear regression
 
     def get_value(self, state):
-        pass
+        return np.dot(self.theta, state.phi())
 
     def get_actions(self, state):
         pass
