@@ -1,10 +1,10 @@
+from sklearn.linear_model import LinearRegression
 from math import pi, sin, cos
 from random import random
 import numpy as np
 import copy
 
 __author__ = 'Tommy'
-
 
 class SamplingBasedFittedValueIteration(object):
     """The Sampling-based Fitted Value Iteration algorithm, approximating the value function of the states.
@@ -30,10 +30,10 @@ class SamplingBasedFittedValueIteration(object):
 
     def fit(self):
         # randomly sample m states
-        # TODO: use the sampling method from env
-        sample_states = self.env_init.sampling_states(self.m)
+        sample_states = [self.state_init.sampling() for i in range(self.n_states)]
 
         y = []
+        x = []
         for i in range(self.n_states):
             state_current = sample_states[i]
             for j in range(self.n_actions):
@@ -41,13 +41,13 @@ class SamplingBasedFittedValueIteration(object):
                 q = 0
                 y.append(0)
                 for k in range(self.n_targets):
-                    # TODO: overload the __add__ operator of the State class
-                    state_next = state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]])
+                    state_next = state_current.copy()
+                    state_next.update(action, np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]))
                     q += self.env.get_reward(state_current) + self.env.gamma * self.get_value(state_next)
                 q /= k
                 y[i] = q if q > y[i] else y[i]
-        # TODO: implement the linear regression here
-        # self.theta <- linear regression
+                x.append(state_current.phi())
+        self.theta = np.linalg.lstsq(x, y)[0]
 
     def get_value(self, state):
         return np.dot(self.theta, state.phi())

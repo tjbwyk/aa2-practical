@@ -1,8 +1,9 @@
-__author__ = 'kostas'
+__author__ = 'Tommy'
+
+from random import uniform
 
 from Player import Player
-from State import *
-from random import uniform
+from models.State import *
 
 
 class Field(object):
