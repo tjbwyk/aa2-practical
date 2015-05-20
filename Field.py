@@ -40,7 +40,7 @@ class Field(object):
 
     def game_over(self):
         """
-        True if the prey is within a radius of 1 from the predator
+        True, if the prey is within a radius of 1 from the predator, else false.
         :return: boolean
         """
         dist = 0
@@ -54,7 +54,7 @@ class Field(object):
 
     def generate(self, m):
         """
-        Uniformly samples #m states from S
+        Uniformly samples m number of states from the state space S
         :param m: number of states to sample
         :return: list of states sampled
         """
