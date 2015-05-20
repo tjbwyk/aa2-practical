@@ -7,7 +7,7 @@ import numpy as np
 class Predator(Player):
 
     def __init__(self, x, y, environment):
-        super.init(x, y, environment)
+        Player.__init__(self, x, y, environment)
         self.policy = None
 
     def set_policy(self, policy):
@@ -25,17 +25,21 @@ class Predator(Player):
             actions.append(self.random_action())
         return actions
 
-    def move(self, current_state):
+    def move(self):
 
-        n = 50
+        max1 = 0
+        new_state = []
+        current_state = np.array([self.x, self.y])
+        n = 500
         actions = np.array(self.sample_action_space(n))
 
-        next_states = actions + current_state
-        values = self.policy.lm.predict(next_states)
-        index = np.argmax(values)
+        next_states = np.remainder(actions + current_state, [self.max_x, self.max_y])
+        for i in next_states:
+            value = np.dot(self.policy.theta, i)
+            if value > max1:
+                max1 = value
+                new_state = i
 
-        new_state = next_states(index)
-
-        self.x = new_state(0)
-        self.y = new_state(1)
+        self.x = new_state[0]
+        self.y = new_state[1]
 

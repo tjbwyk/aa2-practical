@@ -11,7 +11,7 @@ class SamplingBasedFittedValueIteration(object):
     """The Sampling-based Fitted Value Iteration algorithm, approximating the value function of the states.
     """
 
-    def __init__(self, env_init, state_init, n_states=1000, n_actions=10, n_targets=100, thres=0.1):
+    def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=10, thres=0.1, gamma=0.9):
         """
         :param env_init: initial environment
         :param state_init: initial state
@@ -28,8 +28,9 @@ class SamplingBasedFittedValueIteration(object):
         self.lm = None
         self.converged = False
         self.thres = thres
+        self.gamma = gamma
         # initialize theta = 0
-        self.theta = np.zeros(self.state_init.dim)
+        self.theta = np.zeros(len(self.state_init))
 
     def fit(self):
         # randomly sample m states
@@ -53,22 +54,23 @@ class SamplingBasedFittedValueIteration(object):
 
                         # TODO: overload the __add__ operator of the State class
                         state_next = np.remainder(state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]), [self.env_init.width, self.env_init.height])
-                        q += self.env.get_reward(state_current) + self.env.gamma * self.get_value(state_next)
+                        q += self.env_init.get_reward(state_current) + self.gamma * self.get_value(state_next)
                     q /= k
                     y[i] = q if q > y[i] else y[i]
+
             # TODO: implement the linear regression here
-            self.lm = linear_model.LinearRegression()
-            self.lm.fit(sample_states, y)
-            v = self.lm.predict(sample_states)
+
+            self.theta = np.array(np.linalg.lstsq(sample_states, y)[0])
+            v = np.dot(sample_states, self.theta)
             if np.max(v - prev_v) < self.thres:
                 self.converged = True
-            prev_v = v
+            prev_v = np.array(v)
 
         # self.theta = lm.get_params()
         # self.theta <- linear regression
 
     def get_value(self, state):
-        return np.dot(self.theta, state.phi())
+        return np.dot(self.theta, state)
 
     def get_actions(self, state):
         pass

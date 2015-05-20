@@ -4,6 +4,7 @@ from Player import Player
 from State import *
 from random import uniform
 import time
+from Predator import Predator
 
 
 class Field(object):
@@ -24,7 +25,7 @@ class Field(object):
 
     def add_player(self, player):
 
-        if isinstance(player, Player):
+        if isinstance(player, Predator):
             self.predators.append(player)
         else:
             self.prey = player
@@ -68,7 +69,7 @@ class Field(object):
         """
         samples = []
         boundary_x = self.width / 2.0
-        boundary_y = self.length / 2.0
+        boundary_y = self.height / 2.0
 
         if self.state.dim == 1:
             for i in range(0, m):
@@ -88,21 +89,35 @@ class Field(object):
 
         return samples
 
-    def __str__(self):
-        return self.predators(0).x, self.predators(0).y, self.prey.x, self.prey.y
+    def printme(self):
+
+        print "%0.2f, %0.2f | %0.2f, %0.2f " % (self.predators[0].x, self.predators[0].y, self.prey.x, self.prey.y)
 
     def run(self):
 
         steps = 0
-        print self
+        self.printme()
         start_time = time.time()
 
         while not self.game_over():
             steps += 1
-            self.predators(0).move()
+            self.predators[0].move()
             self.prey.move()
+            self.printme()
 
         duration = time.time() - start_time
-        print self
+        self.printme()
         print "Steps:", steps
         print "Duration:", duration
+
+    def get_reward(self, state):
+
+        dist = 0
+        if self.state.dim == 2:
+            dist = sum(state**2)
+        elif self.state.dim == 1:
+            dist = state
+        if dist < 1:
+            return 1
+        else:
+            return 0

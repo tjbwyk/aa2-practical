@@ -9,4 +9,4 @@ class Player(object):
         self.y = y
         environment.add_player(self)
         self.max_x = environment.width
-        self.max_y = environment.length
+        self.max_y = environment.height

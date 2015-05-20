@@ -12,6 +12,9 @@ forest.set_state_type(d2_state)
 
 tiger = Predator(0, 0, forest)
 zebra = Prey(5, 5, forest)
-policy = SamplingBasedFittedValueIteration()
+policy = SamplingBasedFittedValueIteration(forest, forest.get_current_state())
+policy.fit()
+tiger.set_policy(policy)
+
 
 forest.run()
