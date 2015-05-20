@@ -3,6 +3,7 @@ __author__ = 'kostas'
 from Player import Player
 from State import *
 from random import uniform
+import time
 
 
 class Field(object):
@@ -10,13 +11,16 @@ class Field(object):
 
     """
 
-    def __init__(self, width, height, state_type=RelativeDistanceState()):
+    def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.state = state_type
+        self.state = None
         self.predators = []
         self.prey = None
         self.steps = 0
+
+    def set_state_type(self, state):
+        self.state = state
 
     def add_player(self, player):
 
@@ -26,11 +30,15 @@ class Field(object):
             self.prey = player
 
     def get_current_state(self):
+        """
+        Returns the current state of the world
+        :return:
+        """
         res = []
         if self.state.dim == 2:
             diff_x = self.predators[0].x - self.prey.x
             diff_y = self.predators[0].y - self.prey.y
-            res = diff_x, diff_y
+            res = np.array([diff_x, diff_y])
         elif self.state.dim == 1:
             diff_x = (self.predators[0].x - self.prey.x)**2
             diff_y = (self.predators[0].y - self.prey.y)**2
@@ -79,3 +87,22 @@ class Field(object):
                 samples.append(current_sample)
 
         return samples
+
+    def __str__(self):
+        return self.predators(0).x, self.predators(0).y, self.prey.x, self.prey.y
+
+    def run(self):
+
+        steps = 0
+        print self
+        start_time = time.time()
+
+        while not self.game_over():
+            steps += 1
+            self.predators(0).move()
+            self.prey.move()
+
+        duration = time.time() - start_time
+        print self
+        print "Steps:", steps
+        print "Duration:", duration

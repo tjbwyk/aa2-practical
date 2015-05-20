@@ -2,6 +2,7 @@ from math import pi, sin, cos
 from random import random
 import numpy as np
 import copy
+from sklearn import linear_model
 
 __author__ = 'Tommy'
 
@@ -10,7 +11,7 @@ class SamplingBasedFittedValueIteration(object):
     """The Sampling-based Fitted Value Iteration algorithm, approximating the value function of the states.
     """
 
-    def __init__(self, env_init, state_init, n_states=1000, n_actions=10, n_targets=100):
+    def __init__(self, env_init, state_init, n_states=1000, n_actions=10, n_targets=100, thres=0.1):
         """
         :param env_init: initial environment
         :param state_init: initial state
@@ -24,29 +25,46 @@ class SamplingBasedFittedValueIteration(object):
         self.n_states = n_states
         self.n_actions = n_actions
         self.n_targets = n_targets
-
+        self.lm = None
+        self.converged = False
+        self.thres = thres
         # initialize theta = 0
         self.theta = np.zeros(self.state_init.dim)
 
     def fit(self):
         # randomly sample m states
-        # TODO: use the sampling method from env
-        sample_states = self.env_init.sampling_states(self.m)
+        sample_states = self.env_init.generate(self.n_states)
+        # initializing y
+        y = np.zeros(self.n_states)
+        prev_v = np.zeros(self.n_states)
 
-        y = []
-        for i in range(self.n_states):
-            state_current = sample_states[i]
-            for j in range(self.n_actions):
-                action = rand_circle(radius=1.5)
-                q = 0
-                y.append(0)
-                for k in range(self.n_targets):
-                    # TODO: overload the __add__ operator of the State class
-                    state_next = state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]])
-                    q += self.env.get_reward(state_current) + self.env.gamma * self.get_value(state_next)
-                q /= k
-                y[i] = q if q > y[i] else y[i]
-        # TODO: implement the linear regression here
+        while not self.converged:
+            for i in range(self.n_states):
+                state_current = sample_states[i]
+
+                for j in range(self.n_actions):
+
+                    action = rand_circle(radius=1.5)
+                    q = 0
+
+                    # y.append(0)
+
+                    for k in range(self.n_targets):
+
+                        # TODO: overload the __add__ operator of the State class
+                        state_next = np.remainder(state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]), [self.env_init.width, self.env_init.height])
+                        q += self.env.get_reward(state_current) + self.env.gamma * self.get_value(state_next)
+                    q /= k
+                    y[i] = q if q > y[i] else y[i]
+            # TODO: implement the linear regression here
+            self.lm = linear_model.LinearRegression()
+            self.lm.fit(sample_states, y)
+            v = self.lm.predict(sample_states)
+            if np.max(v - prev_v) < self.thres:
+                self.converged = True
+            prev_v = v
+
+        # self.theta = lm.get_params()
         # self.theta <- linear regression
 
     def get_value(self, state):

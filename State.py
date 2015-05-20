@@ -1,15 +1,12 @@
 __author__ = 'kostas'
 
-import math.sqrt
+import math
 import numpy as np
 
 
 class State(object):
 
-    def __init__(self):
-        self.environment = None
-
-    def set_environment(self, env):
+    def __init__(self, env):
         self.environment = env
 
     def request(self):
@@ -18,8 +15,8 @@ class State(object):
 
 class RelativeDistanceState(State):
 
-    def __init__(self):
-        super(self)
+    def __init__(self, environment):
+        State.__init__(self, environment)
         self.dim = 2
 
     def request(self):
