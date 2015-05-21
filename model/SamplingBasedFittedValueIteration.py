@@ -55,7 +55,7 @@ class SamplingBasedFittedValueIteration(object):
                     for k in range(self.n_targets):
 
                         # TODO: overload the __add__ operator of the State class
-                        state_next = np.remainder(state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]), [self.env_init.width, self.env_init.height])
+                        state_next = np.remainder(state_current + action - np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]), [self.env_init.width, self.env_init.height])
                         q += self.env_init.get_reward(state_current) + self.gamma * self.get_value(state_next)
                     q /= self.n_targets
                     y[i] = q if q > y[i] else y[i]
@@ -86,7 +86,8 @@ class SamplingBasedFittedValueIteration(object):
 
         fig = plt.figure()
         ax = fig.gca(projection='3d')
-        surf = ax.plot_surface(X, Y, Z, cmap=cm.get_cmap('Oranges'), linewidth=0)
+        surf = ax.plot_surface(X, Y, Z, cmap=cm.get_cmap('Oranges'), linewidth=0, vmin=-1, vmax=1)
+        ax.set_zlim(-1, 1)
         plt.show()
 
 def rand_circle(radius=1):
