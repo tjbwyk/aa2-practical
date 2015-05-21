@@ -15,6 +15,7 @@ class SamplingBasedFittedValueIteration(object):
     """
 
     def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=10, thres=0.01, gamma=0.9):
+
         """
         :param env_init: initial environment
         :param state_init: initial state
@@ -40,6 +41,8 @@ class SamplingBasedFittedValueIteration(object):
         # initializing y
         y = np.zeros(self.n_states)
         prev_v = np.zeros(self.n_states)
+
+        prev_theta = 0
 
         while not self.converged:
             for i in range(self.n_states):
@@ -68,10 +71,10 @@ class SamplingBasedFittedValueIteration(object):
             # TODO: implement the linear regression here
 
             self.theta = np.array(np.linalg.lstsq(sample_states, y)[0])
-            v = np.dot(sample_states, self.theta)
-            if np.max(v - prev_v) < self.thres:
+            print self.theta
+            if np.abs(self.theta - prev_theta) < self.thres:
                 self.converged = True
-            prev_v = np.array(v)
+            prev_theta = self.theta
 
         # self.theta = lm.get_params()
         # self.theta <- linear regression
@@ -87,14 +90,17 @@ class SamplingBasedFittedValueIteration(object):
         if len(state) == 2:
             state_next = np.remainder(state + action - noise, [self.env_init.width, self.env_init.height])
         else:
-            state_next = state + action
+            state_next = state + action % sqrt((self.width**2 + self.height**2))
         return state_next
 
     def draw_value_func(self):
         x = np.arange(-5, 5, 0.1)
         y = np.arange(-5, 5, 0.1)
         X, Y = np.meshgrid(x, y)
-        Z = [[self.get_value([X[j, i], Y[j, i]]) for i in range(x.size)] for j in range(y.size)]
+        if self.env_init.state.dim == 2:
+            Z = [[self.get_value([X[j, i], Y[j, i]]) for i in range(x.size)] for j in range(y.size)]
+        else:
+            Z = [[self.get_value(np.linalg.norm([X[j, i], Y[j, i]]))[0] for i in range(x.size)] for j in range(y.size)]
 
         fig = plt.figure()
         ax = fig.gca(projection='3d')
