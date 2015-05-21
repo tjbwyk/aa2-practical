@@ -32,7 +32,6 @@ class Predator(Player):
         current_state = np.array([self.x, self.y])
         n = 500
         actions = np.array(self.sample_action_space(n))
-
         next_states = np.remainder(actions + current_state, [self.max_x, self.max_y])
         for i in next_states:
             value = np.dot(self.policy.theta, i)

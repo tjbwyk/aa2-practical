@@ -11,7 +11,7 @@ class SamplingBasedFittedValueIteration(object):
     """The Sampling-based Fitted Value Iteration algorithm, approximating the value function of the states.
     """
 
-    def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=10, thres=0.1, gamma=0.9):
+    def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=5, thres=0.1, gamma=0.9):
         """
         :param env_init: initial environment
         :param state_init: initial state
@@ -55,7 +55,7 @@ class SamplingBasedFittedValueIteration(object):
                         # TODO: overload the __add__ operator of the State class
                         state_next = np.remainder(state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]), [self.env_init.width, self.env_init.height])
                         q += self.env_init.get_reward(state_current) + self.gamma * self.get_value(state_next)
-                    q /= k
+                    q /= self.n_targets
                     y[i] = q if q > y[i] else y[i]
 
             # TODO: implement the linear regression here
