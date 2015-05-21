@@ -7,7 +7,9 @@ from State import *
 
 
 forest = Field(10, 10)
-d2_state = RelativeDistanceState(forest)
+# d2_state = RelativeDistanceState(forest)
+d2_state = EuclideanDistanceState(forest)
+
 forest.set_state_type(d2_state)
 
 tiger = Predator(0, 0, forest)

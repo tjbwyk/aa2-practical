@@ -54,7 +54,7 @@ class Field(object):
         elif self.state.dim == 1:
             diff_x = (self.predators[0].x - self.prey.x)**2
             diff_y = (self.predators[0].y - self.prey.y)**2
-            res = np.array(math.sqrt(diff_x + diff_y))
+            res = np.array([math.sqrt(diff_x + diff_y)])
 
         return res
 
@@ -87,7 +87,7 @@ class Field(object):
                 rx = uniform(- boundary_x, boundary_x)
                 ry = uniform(- boundary_y, boundary_y)
 
-                current_sample = math.sqrt(rx**2 + ry**2)
+                current_sample = np.array([math.sqrt(rx**2 + ry**2)])
                 samples.append(current_sample)
 
         elif self.state.dim == 2:

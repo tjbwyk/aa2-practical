@@ -15,8 +15,8 @@ class Predator(Player):
 
     @staticmethod
     def random_action():
-        x = random() * 1.5
-        y = random() * 1.5
+        x = (random() * 3) - 1.5
+        y = random() * 3 - 1.5
         return [x, y]
 
     def sample_action_space(self, n):
@@ -33,11 +33,14 @@ class Predator(Player):
         n = 500
         actions = np.array(self.sample_action_space(n))
         next_states = np.remainder(actions + current_state, [self.max_x, self.max_y])
-        for i in next_states:
-            value = np.dot(self.policy.theta, i)
-            if value > max1:
-                max1 = value
-                new_state = i
+        if len(self.policy.theta) == 2:
+            for i in next_states:
+                value = np.dot(self.policy.theta, i)
+                if value > max1:
+                    max1 = value
+                    new_state = i
+        elif len(self.policy.theta) == 1:
+
 
         self.x = new_state[0]
         self.y = new_state[1]

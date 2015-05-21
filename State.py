@@ -29,8 +29,8 @@ class RelativeDistanceState(State):
 
 class EuclideanDistanceState(State):
 
-    def __init__(self):
-        super(self)
+    def __init__(self, environment):
+        State.__init__(self, environment)
         self.dim = 1
 
     def request(self):
