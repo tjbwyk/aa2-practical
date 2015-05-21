@@ -27,7 +27,7 @@ class Predator(Player):
 
     def move(self):
 
-        max1 = 0
+        max1 = -2147483648
         new_state = []
         current_state = np.array([self.x, self.y])
         n = 500

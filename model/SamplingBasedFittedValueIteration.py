@@ -1,7 +1,10 @@
 from math import pi, sin, cos
 from random import random
+from matplotlib import cm
 import numpy as np
+import matplotlib.pyplot as plt
 import copy
+from mpl_toolkits.mplot3d import Axes3D
 from sklearn import linear_model
 
 __author__ = 'Tommy'
@@ -11,7 +14,7 @@ class SamplingBasedFittedValueIteration(object):
     """The Sampling-based Fitted Value Iteration algorithm, approximating the value function of the states.
     """
 
-    def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=5, thres=0.1, gamma=0.9):
+    def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=10, thres=0.1, gamma=0.9):
         """
         :param env_init: initial environment
         :param state_init: initial state
@@ -75,6 +78,17 @@ class SamplingBasedFittedValueIteration(object):
     def get_actions(self, state):
         pass
 
+
+    def draw_value_func(self):
+        x = np.arange(-5, 5, 0.1)
+        y = np.arange(-5, 5, 0.1)
+        X, Y = np.meshgrid(x, y)
+        Z = [[self.get_value([X[j, i], Y[j, i]]) for i in range(x.size)] for j in range(y.size)]
+
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+        surf = ax.plot_surface(X, Y, Z, cmap=cm.get_cmap('Oranges'), linewidth=0)
+        plt.show()
 
 def rand_circle(radius=1):
     t = 2 * pi * random()
