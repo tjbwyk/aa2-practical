@@ -14,7 +14,7 @@ class SamplingBasedFittedValueIteration(object):
     """The Sampling-based Fitted Value Iteration algorithm, approximating the value function of the states.
     """
 
-    def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=10, thres=0.1, gamma=0.9):
+    def __init__(self, env_init, state_init, n_states=100, n_actions=10, n_targets=10, thres=0.01, gamma=0.9):
         """
         :param env_init: initial environment
         :param state_init: initial state
@@ -32,7 +32,7 @@ class SamplingBasedFittedValueIteration(object):
         self.gamma = gamma
         self.converged = False
         # initialize theta = 0
-        self.theta = np.zeros(len(self.state_init))
+        self.theta = np.zeros(self.env_init.state.dim)
 
     def fit(self):
         # randomly sample m states
@@ -47,7 +47,11 @@ class SamplingBasedFittedValueIteration(object):
 
                 for j in range(self.n_actions):
 
-                    action = rand_circle(radius=1.5)
+                    if self.env_init.state.dim == 2:
+                        action = rand_circle(radius=1.5)
+                    elif self.env_init.state.dim == 1:
+                        action = (random() * 3) - 1.5
+
                     q = 0
 
                     # y.append(0)
@@ -83,14 +87,8 @@ class SamplingBasedFittedValueIteration(object):
         if len(state) == 2:
             state_next = np.remainder(state + action - noise, [self.env_init.width, self.env_init.height])
         else:
-            pred_x = (self.env_init.predators[0].x + action[0]) % self.env_init.width
-            pred_y = (self.env_init.predators[0].y + action[1]) % self.env_init.height
-            prey_x = (self.env_init.prey.x + noise[0]) % self.env_init.width
-            prey_y = (self.env_init.prey.y + noise[1]) % self.env_init.height
-            state_next = sqrt((pred_x - prey_x)**2 + (pred_y - prey_y)**2)
+            state_next = state + action
         return state_next
-
-
 
     def draw_value_func(self):
         x = np.arange(-5, 5, 0.1)
@@ -103,6 +101,7 @@ class SamplingBasedFittedValueIteration(object):
         surf = ax.plot_surface(X, Y, Z, cmap=cm.get_cmap('Oranges'), linewidth=0, vmin=-1, vmax=1)
         ax.set_zlim(-1, 1)
         plt.show()
+
 
 def rand_circle(radius=1):
     t = 2 * pi * random()

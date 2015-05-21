@@ -34,29 +34,13 @@ class Field(object):
     def get_current_state(self):
         """
         Returns the current state of the world
-        :return:
+        :return: np.array [1x2] or [1x1]
         """
-        res = []
-        if self.state.dim == 2:
-            diff_x = self.predators[0].x - self.prey.x
-            if abs(diff_x) > self.width / 2.0:
-                if diff_x < 0:
-                    diff_x %= (self.width / 2.0)
-                else:
-                    diff_x = - (self.width - self.predators[0].x + self.prey.x)
-            diff_y = self.predators[0].y - self.prey.y
-            if abs(diff_y) > self.height / 2.0:
-                if diff_y < 0:
-                    diff_y %= (self.height / 2.0)
-                else:
-                    diff_y = - (self.height - self.predators[0].y + self.prey.y)
-            res = np.array([diff_x, diff_y])
-        elif self.state.dim == 1:
-            diff_x = (self.predators[0].x - self.prey.x)**2
-            diff_y = (self.predators[0].y - self.prey.y)**2
-            res = np.array([math.sqrt(diff_x + diff_y)])
+        pred_location = [self.predators[0].x, self.predators[0].y]
+        prey_location = [self.prey.x, self.prey.y]
+        result = self.state2vector(pred_location, prey_location)
 
-        return res
+        return result
 
     def game_over(self):
         """
@@ -92,8 +76,8 @@ class Field(object):
 
         elif self.state.dim == 2:
             for i in range(0, m):
-                rx = uniform(- boundary_x, boundary_x)
-                ry = uniform(- boundary_y, boundary_y)
+                rx = uniform(0, boundary_x)
+                ry = uniform(0, boundary_y)
 
                 current_sample = np.array([rx, ry])
                 samples.append(current_sample)
@@ -139,7 +123,6 @@ class Field(object):
 
     def find_distance(self):
 
-        dist = 0
         state = self.get_current_state()
         if self.state.dim == 2:
             dist = math.sqrt(sum(state**2))
@@ -155,8 +138,25 @@ class Field(object):
         :param prey_loc: location of the prey
         :return: np.array [1x2] or [1x1]
         """
+        res1 = abs(pred_loc[0] - prey_loc[0])
+        if res1 > (self.width / 2.0):
+            res1 = pred_loc[0] - prey_loc[0]
+            if res1 < 0:
+                res1 %= (self.width / 2.0)
+            else:
+                res1 = self.width - pred_loc[0] + prey_loc[0]
+
+        res2 = abs(pred_loc[1] - prey_loc[1])
+        if res2 > (self.height / 2.0):
+            res2 = pred_loc[1] - prey_loc[1]
+            if res2 < 0:
+                res2 %= (self.height / 2.0)
+            else:
+                res2 = (-res2) % (self.height / 2.0)
+
         if self.state.dim == 1:
-            result = np.array(math.sqrt((pred_loc[0] - prey_loc[0])**2 + (pred_loc[1] - prey_loc[1])**2))
+            result = np.array([math.sqrt(res1**2 + res2**2)])
         elif self.state.dim == 2:
-            result = np.array([abs(pred_loc[0] - prey_loc[0]), abs(pred_loc[1] - prey_loc[1])])
+            result = np.array([res1, res2])
+
         return result
