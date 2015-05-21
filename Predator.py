@@ -2,6 +2,7 @@ __author__ = 'kostas'
 from Player import Player
 from random import random
 import numpy as np
+from math import sqrt
 
 
 class Predator(Player):
@@ -40,8 +41,12 @@ class Predator(Player):
                     max1 = value
                     new_state = i
         elif len(self.policy.theta) == 1:
-
-
+            for i in next_states:
+                distance = sqrt(i[0]**2 + i[1]**2)
+                value = np.dot(self.policy.theta, distance)
+                if value > max1:
+                    max1 = value
+                    new_state = i
         self.x = new_state[0]
         self.y = new_state[1]
 
