@@ -1,4 +1,4 @@
-from math import pi, sin, cos
+from math import pi, sin, cos, sqrt
 from random import random
 import numpy as np
 import copy
@@ -50,9 +50,8 @@ class SamplingBasedFittedValueIteration(object):
                     # y.append(0)
 
                     for k in range(self.n_targets):
-
-                        # TODO: overload the __add__ operator of the State class
-                        state_next = np.remainder(state_current + action + np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]]), [self.env_init.width, self.env_init.height])
+                        noise = np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]])
+                        state_next = self.bellman(state_current, action, noise)
                         q += self.env_init.get_reward(state_current) + self.gamma * self.get_value(state_next)
                     q /= self.n_targets
                     y[i] = q if q > y[i] else y[i]
@@ -73,6 +72,19 @@ class SamplingBasedFittedValueIteration(object):
 
     def get_actions(self, state):
         pass
+
+    def bellman(self, state, action, noise):
+
+        if len(state) == 2:
+            state_next = np.remainder(state + action - noise, [self.env_init.width, self.env_init.height])
+        else:
+            pred_x = (self.env_init.predators[0].x + action[0]) % self.env_init.width
+            pred_y = (self.env_init.predators[0].y + action[1]) % self.env_init.height
+            prey_x = (self.env_init.prey.x + noise[0]) % self.env_init.width
+            prey_y = (self.env_init.prey.y + noise[1]) % self.env_init.height
+            state_next = sqrt((pred_x - prey_x)**2 + (pred_y - prey_y)**2)
+        return state_next
+
 
 
 def rand_circle(radius=1):
