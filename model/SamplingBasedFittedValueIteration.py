@@ -90,7 +90,7 @@ class SamplingBasedFittedValueIteration(object):
         if len(state) == 2:
             state_next = np.remainder(state + action - noise, [self.env_init.width, self.env_init.height])
         else:
-            state_next = state + action % sqrt((self.width**2 + self.height**2))
+            state_next = state + action % sqrt(((self.width/2.0)**2 + (self.height/2.0)**2))
         return state_next
 
     def draw_value_func(self):
