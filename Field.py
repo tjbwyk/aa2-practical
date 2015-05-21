@@ -147,3 +147,16 @@ class Field(object):
             dist = state
 
         return dist
+
+    def state2vector(self, pred_loc, prey_loc):
+        """
+        Returns the vector representation of the state
+        :param pred_loc: location of the predator
+        :param prey_loc: location of the prey
+        :return: np.array [1x2] or [1x1]
+        """
+        if self.state.dim == 1:
+            result = np.array(math.sqrt((pred_loc[0] - prey_loc[0])**2 + (pred_loc[1] - prey_loc[1])**2))
+        elif self.state.dim == 2:
+            result = np.array([abs(pred_loc[0] - prey_loc[0]), abs(pred_loc[1] - prey_loc[1])])
+        return result
