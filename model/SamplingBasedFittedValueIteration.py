@@ -25,10 +25,9 @@ class SamplingBasedFittedValueIteration(object):
         self.n_states = n_states
         self.n_actions = n_actions
         self.n_targets = n_targets
-        self.lm = None
-        self.converged = False
         self.thres = thres
         self.gamma = gamma
+        self.converged = False
         # initialize theta = 0
         self.theta = np.zeros(len(self.state_init))
 

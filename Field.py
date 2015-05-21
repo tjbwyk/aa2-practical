@@ -4,6 +4,7 @@ from Player import Player
 from State import *
 from random import uniform
 import time
+import math
 from Predator import Predator
 
 
@@ -38,7 +39,17 @@ class Field(object):
         res = []
         if self.state.dim == 2:
             diff_x = self.predators[0].x - self.prey.x
+            if abs(diff_x) > self.width / 2.0:
+                if diff_x < 0:
+                    diff_x %= (self.width / 2.0)
+                else:
+                    diff_x = - (self.width - self.predators[0].x + self.prey.x)
             diff_y = self.predators[0].y - self.prey.y
+            if abs(diff_y) > self.height / 2.0:
+                if diff_y < 0:
+                    diff_y %= (self.height / 2.0)
+                else:
+                    diff_y = - (self.height - self.predators[0].y + self.prey.y)
             res = np.array([diff_x, diff_y])
         elif self.state.dim == 1:
             diff_x = (self.predators[0].x - self.prey.x)**2
@@ -73,8 +84,8 @@ class Field(object):
 
         if self.state.dim == 1:
             for i in range(0, m):
-                rx = uniform(0, boundary_x)
-                ry = uniform(0, boundary_y)
+                rx = uniform(- boundary_x, boundary_x)
+                ry = uniform(- boundary_y, boundary_y)
 
                 current_sample = math.sqrt(rx**2 + ry**2)
                 samples.append(current_sample)
@@ -91,10 +102,15 @@ class Field(object):
 
     def printme(self):
 
-        print "%0.2f, %0.2f | %0.2f, %0.2f " % (self.predators[0].x, self.predators[0].y, self.prey.x, self.prey.y)
+        d = self.find_distance()
+        print "%0.2f, %0.2f | %0.2f, %0.2f -- %0.2f"\
+              % (self.predators[0].x, self.predators[0].y, self.prey.x, self.prey.y, d)
 
     def run(self):
-
+        """
+        Runs one simulation of the world
+        :return:
+        """
         steps = 0
         self.printme()
         start_time = time.time()
@@ -106,7 +122,6 @@ class Field(object):
             self.printme()
 
         duration = time.time() - start_time
-        self.printme()
         print "Steps:", steps
         print "Duration:", duration
 
@@ -114,10 +129,21 @@ class Field(object):
 
         dist = 0
         if self.state.dim == 2:
-            dist = sum(state**2)
+            dist = math.sqrt(sum(state**2))
         elif self.state.dim == 1:
             dist = state
         if dist < 1:
             return 1
         else:
             return 0
+
+    def find_distance(self):
+
+        dist = 0
+        state = self.get_current_state()
+        if self.state.dim == 2:
+            dist = math.sqrt(sum(state**2))
+        elif self.state.dim == 1:
+            dist = state
+
+        return dist

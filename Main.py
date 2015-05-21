@@ -6,7 +6,7 @@ from model.SamplingBasedFittedValueIteration import SamplingBasedFittedValueIter
 from State import *
 
 
-forest = Field(11, 11)
+forest = Field(10, 10)
 d2_state = RelativeDistanceState(forest)
 forest.set_state_type(d2_state)
 
