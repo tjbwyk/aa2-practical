@@ -38,4 +38,4 @@ class EuclideanDistanceState(State):
         diff_x = (self.environment.players(0).x - self.environment.players(1).x)**2
         diff_y = (self.environment.players(0).y - self.environment.players(1).y)**2
 
-        return math.sqrt(diff_x + diff_y)
+        return np.array([math.sqrt(diff_x + diff_y)])

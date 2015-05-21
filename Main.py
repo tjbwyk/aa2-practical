@@ -16,6 +16,7 @@ tiger = Predator(0, 0, forest)
 zebra = Prey(5, 5, forest)
 policy = SamplingBasedFittedValueIteration(forest, forest.get_current_state())
 policy.fit()
+policy.draw_value_func()
 tiger.set_policy(policy)
 
 
