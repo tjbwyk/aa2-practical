@@ -54,7 +54,7 @@ class Field(object):
         elif self.state.dim == 1:
             diff_x = (self.predators[0].x - self.prey.x)**2
             diff_y = (self.predators[0].y - self.prey.y)**2
-            res = math.sqrt(diff_x + diff_y)
+            res = np.array(math.sqrt(diff_x + diff_y))
 
         return res
 
