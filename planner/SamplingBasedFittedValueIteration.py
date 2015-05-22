@@ -4,6 +4,7 @@ from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 from models.Predator import Predator
 
 
@@ -30,6 +31,7 @@ class SamplingBasedFittedValueIteration(object):
         self.theta = np.zeros(self.env.state.dim)
 
     def fit(self):
+        timer = time.clock()
         # randomly sample m states
         sample_states = [self.env.state.sampling() for i in range(self.n_states)]
 
@@ -59,6 +61,8 @@ class SamplingBasedFittedValueIteration(object):
             self.theta = new_theta
             print 'iteration #' + str(t) + ': theta=' + str(self.theta)
             t += 1
+
+        print 'Running time: ' + str(time.clock() - timer) + 's'
 
     def plot(self):
         x = np.arange(0, 10, 0.1)

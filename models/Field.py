@@ -41,6 +41,28 @@ class Field(object):
         self.planner = self.planner_type(self)
         self.planner.fit()
         self.planner.plot()
+
+    def run_n_times(self, n):
+        """
+        Runs the simulation n times and returns the average steps and time needed for the predator to catch the prey
+        :param n: number of times to run the simulation
+        :return: average_steps_per_episode, average_duration_per_episode
+        """
+        avg_steps = 0
+        state_init = self.state.copy()
+        for i in range(n):
+            steps = 0
+            self.state = state_init.copy()
+            while not self.game_over():
+                steps += 1
+                self.state.pred
+                self.predators[0].move()
+                self.prey.move()
+
+            avg_steps += steps
+
+        avg_steps /= n
+        return avg_steps
     #
     # def add_player(self, player):
     #
