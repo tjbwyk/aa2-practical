@@ -1,5 +1,7 @@
 from copy import copy
 import numpy as np
+from models.Field import rand_circle
+
 
 class State(object):
 
@@ -22,6 +24,21 @@ class State(object):
 
     def is_over(self):
         return self.get_distance() < 1
+
+    def get_actions(self):
+        a_pred = [0, 0]
+        maxV = -2147483648
+        for i in range(100):
+            state_sample = self.copy()
+            a_pred_sample = rand_circle(1.5)
+            state_sample.update(a_pred_sample, [0, 0])
+            V = self.env.planner.get_value(state_sample)
+            if V > maxV:
+                maxV = V
+                a_pred = a_pred_sample
+
+        a_prey = np.random.multivariate_normal([0, 0], [[1, 0], [0, 1]])
+        return a_pred, a_prey
 
     def update(self, a_pred, a_prey):
         self.pred.move(a_pred)

@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+from models.Field import rand_circle
 from models.Predator import Predator
 
 
@@ -62,7 +63,9 @@ class SamplingBasedFittedValueIteration(object):
             print 'iteration #' + str(t) + ': theta=' + str(self.theta)
             t += 1
 
-        print 'Running time: ' + str(time.clock() - timer) + 's'
+        timer = time.clock() - timer
+        print 'Running time: ' + str(timer) + 's'
+        return timer
 
     def plot(self):
         x = np.arange(0, 10, 0.1)
@@ -76,14 +79,3 @@ class SamplingBasedFittedValueIteration(object):
 
     def get_value(self, state):
         return np.dot(self.theta, state.phi())
-
-    def get_actions(self, state):
-        pass
-
-
-def rand_circle(radius=1):
-    t = 2 * pi * random()
-    u = random() + random()
-    r = 2 - u if u > 1 else u
-    return [radius * r * cos(t), radius * r * sin(t)]
-
