@@ -60,7 +60,7 @@ class SamplingBasedFittedValueIteration(object):
             if np.linalg.norm(self.theta - new_theta) < self.threshold:
                 converged = True
             self.theta = new_theta
-            print 'iteration #' + str(t) + ': theta=' + str(self.theta)
+            # print 'iteration #' + str(t) + ': theta=' + str(self.theta)
             t += 1
 
         timer = time.clock() - timer

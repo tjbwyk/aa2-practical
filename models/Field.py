@@ -64,8 +64,8 @@ class Field(object):
             self.state = state_init.copy()
             while not self.is_over(self.state):
                 steps += 1
-                print "episode#%d step#%d: Predator(%.2f, %.2f), Prey(%.2f, %.2f)"\
-                      % (i + 1, steps - 1, self.state.pred.x, self.state.pred.y, self.state.prey.x, self.state.prey.y)
+                # print "episode#%d step#%d: Predator(%.2f, %.2f), Prey(%.2f, %.2f)"\
+                #       % (i + 1, steps - 1, self.state.pred.x, self.state.pred.y, self.state.prey.x, self.state.prey.y)
                 a_pred, a_prey = self.state.get_actions()
                 self.state.update(a_pred, a_prey)
 
