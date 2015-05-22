@@ -79,10 +79,10 @@ class SamplingBasedFittedValueIteration(object):
         ax.set_zlabel('V')
         surf = ax.plot_surface(X, Y, Z, cmap=cm.get_cmap('Oranges'), linewidth=0)
         title = self.env.state_type.__name__ +\
-                       " gamma:%0.2f, nStates:%d,\nnActions:%d, nTargets:%d, threshold:%0.2f"\
+                       " gamma:%0.2f, nStates:%d,\nnActions:%d, nTargets:%d, threshold:%0.3f"\
                        % (self.gamma, self.n_states, self.n_actions, self.n_targets, self.threshold)
         filename = "output\\" + self.env.state_type.__name__ +\
-                       "_gamma%0.2f_nStates%d_nActions%d_nTargets%d_threshold%0.2f.png"\
+                       "_gamma%0.2f_nStates%d_nActions%d_nTargets%d_threshold%0.3f.png"\
                        % (self.gamma, self.n_states, self.n_actions, self.n_targets, self.threshold)
         plt.title(title)
         # plt.draw()

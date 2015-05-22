@@ -12,7 +12,7 @@ def experiment(field, pred, prey, statetype, gamma, ns, na, nt, thres):
     field.learn()
     res = field.run_n_times(n_experiments_per_setting)
     print statetype.__name__ +\
-        " gamma: %0.2f, #states: %d, #actions: %d, #targets: %d, threshold: %0.2f" % (gamma, ns, na, nt, thres)
+        " gamma: %0.2f, #states: %d, #actions: %d, #targets: %d, threshold: %0.3f" % (gamma, ns, na, nt, thres)
     print "steps: %d, duration: %0.2f" % (res[0], res[1])
     return res
 
