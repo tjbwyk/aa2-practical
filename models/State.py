@@ -27,33 +27,15 @@ class State(object):
         self.pred.move(a_pred)
         self.prey.move(a_prey)
 
-class DistanceState(State):
-
-    def __init__(self, env, pred, prey):
-        super(self.__class__, self).__init__(env, pred, prey)
-        self.dim = 2
-
-    def phi(self):
-        diff_x, diff_y = self.get_rel_abs_pos()
-        return np.array([diff_x, diff_y])
-
-    def sampling(self):
-        sample_pred = self.pred.sampling()
-        sample_prey = self.prey.sampling()
-        return DistanceState(self.env, sample_pred, sample_prey)
-
-    def copy(self):
-        return DistanceState(self.env, self.pred, self.prey)
-
 class Distance2DState(State):
 
     def __init__(self, env, pred, prey):
         super(self.__class__, self).__init__(env, pred, prey)
-        self.dim = 1
+        self.dim = 3
 
     def phi(self):
         diff_x, diff_y = self.get_rel_abs_pos()
-        return np.array([np.linalg.norm([diff_x, diff_y])])
+        return np.array([1, diff_x, diff_y])
 
     def sampling(self):
         sample_pred = self.pred.sampling()
@@ -62,3 +44,21 @@ class Distance2DState(State):
 
     def copy(self):
         return Distance2DState(self.env, self.pred, self.prey)
+
+class DistanceState(State):
+
+    def __init__(self, env, pred, prey):
+        super(self.__class__, self).__init__(env, pred, prey)
+        self.dim = 2
+
+    def phi(self):
+        diff_x, diff_y = self.get_rel_abs_pos()
+        return np.array([1, np.linalg.norm([diff_x, diff_y])])
+
+    def sampling(self):
+        sample_pred = self.pred.sampling()
+        sample_prey = self.prey.sampling()
+        return DistanceState(self.env, sample_pred, sample_prey)
+
+    def copy(self):
+        return DistanceState(self.env, self.pred, self.prey)
