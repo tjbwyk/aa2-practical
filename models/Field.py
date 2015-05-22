@@ -46,7 +46,6 @@ class Field(object):
         return state.get_distance() < 1
 
     def learn(self):
-        self.planner = self.planner_type(self)
         self.planner.fit()
         self.planner.plot()
 
