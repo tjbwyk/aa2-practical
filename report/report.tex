@@ -1,0 +1,54 @@
+\documentclass{article}
+%\usepackage{amsmath}
+%\usepackage{times}
+%\usepackage{ amssymb }
+%\usepackage{ bm }
+%\usepackage[T1]{fontenc}
+%\usepackage{babel}
+
+%\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\title{Sampling based fitted value-iteration\\Report}
+
+\author{
+  Lampridis, Konstantinos\\
+  \texttt{10753915}
+  \and
+  Wang, Yikang\\
+  \texttt{student number}
+  \and
+  Wang, Yikang\\
+  \texttt{student number}
+  \and
+  Wang, Yikang\\
+  \texttt{student number}
+}
+
+
+\begin{document}
+  \maketitle
+
+
+%--------------------------------------------
+\section{Introduction}
+
+This report briefly explains our approach for implementing the continuous predator-prey environment using the Sampling based fitted value-iteration algorithm, as well as the challenges we faced and exposes our findings while tweaking different parameters. We simulate the familiar predator-prey environment and gather measurements after each episode and we post the different measurements gathered for the average number of time steps and the average duration per episode over one hundred episodes. This process is repeated for a plethora of different settings governed by altering a set of parameters that affect performance, accuracy and efficiency.
+
+
+%--------------------------------------------
+\section{Implementation}
+
+To begin, we reimplemented the framework of the environment in order to keep it more simple compared to the initial version of Autonomous Agents 1. We opted to experiment on two different state representations: a $[1\times2]$ vector that stores the absolute differences of the $x$ and $y$ coordinates of the agents and a scalar representation as the euclidean distance between them. In both cases, we exploited the fact that we were able to treat the actions of the predator as deterministic since the movement of the prey is just a zero mean Gaussian noise. \textbf{CITATION}To be more specific, in our case
+\[s_{t+1} = f(s_t, a_t) + \epsilon_t\]
+where $f$ is the deterministic function of the state and $\epsilon_t$ is the zero mean Gaussian corresponding to the dynamics of the prey. These facts leaded us to
+\[E_{s'}[V(s')] \approx V(E_{s'}[s']) = V(f(s,a))\]
+
+
+%----------------------------------------
+\section{Conclusions}
+
+
+\bibliographystyle{named}
+\bibliography{library}
+
+\end{document}
