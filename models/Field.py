@@ -1,5 +1,6 @@
 from math import pi, cos, sin
 from random import random
+import time
 
 
 class Field(object):
@@ -20,6 +21,9 @@ class Field(object):
 
     def set_planner_type(self, planner_type):
         self.planner_type = planner_type
+
+    def set_planner(self, field, gamma, ns, na, nt, thres):
+        self.planner = self.planner_type(field, gamma, ns, na, nt, thres)
 
     def add_players(self, pred, prey):
         self.state = self.state_type(self, pred, prey)
@@ -53,20 +57,25 @@ class Field(object):
         :return: average_steps_per_episode, average_duration_per_episode
         """
         avg_steps = 0
+        avg_time = 0
         state_init = self.state.copy()
         for i in range(n):
             steps = 0
+            timer = time.clock()
             self.state = state_init.copy()
             while not self.is_over(self.state):
                 steps += 1
-                #print steps
+                print "episode#%d step#%d: Predator(%.2f, %.2f), Prey(%.2f, %.2f)"\
+                      % (i + 1, steps - 1, self.state.pred.x, self.state.pred.y, self.state.prey.x, self.state.prey.y)
                 a_pred, a_prey = self.state.get_actions()
                 self.state.update(a_pred, a_prey)
 
             avg_steps += steps
+            avg_time += time.clock() - timer
 
-        avg_steps /= n
-        return avg_steps
+        avg_steps /= 1.0 * n
+        avg_time /= 1.0 * n
+        return avg_steps, avg_time
 
 def rand_circle(radius=1):
     t = 2 * pi * random()
