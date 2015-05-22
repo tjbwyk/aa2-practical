@@ -1,25 +1,26 @@
-__author__ = 'Tommy'
-
-
 class Player(object):
 
-    def __init__(self, x, y, x_max, y_max):
+    def __init__(self, env, x, y):
+        self.env = env
         self.x = x
         self.y = y
-        self.x_max = x_max
-        self.y_max = y_max
 
-    def move(self, dxy):
-        self.move(dxy[0], dxy[1])
+    def move(self, d0, d1=None):
+        if d1:
+            dx = d0
+            dy = d1
+        else:
+            dx = d0[0]
+            dy = d0[1]
 
-    def move(self, dx, dy):
         self.x += dx
         self.y += dy
         if self.x < 0:
-            self.x += self.x_max
+            self.x += self.env.width
         if self.y < 0:
-            self.y += self.y_max
-        if self.x >= self.x_max:
-            self.x -= self.x_max
-        if self.y >= self.y_max:
-            self.y -= self.y_max
+            self.y += self.env.height
+        if self.x >= self.env.width:
+            self.x -= self.env.width
+        if self.y >= self.env.height:
+            self.y -= self.env.height
+
