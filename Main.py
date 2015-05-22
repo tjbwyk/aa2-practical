@@ -11,7 +11,7 @@ def experiment(field, pred, prey, statetype, gamma, ns, na, nt, thres):
     field.set_planner(field, gamma, ns, na, nt, thres)
     field.learn()
     res = field.run_n_times(n_experiments_per_setting)
-    print str(statetype.__class__.__name__) +\
+    print statetype.__name__ +\
         " gamma: %0.2f, #states: %d, #actions: %d, #targets: %d, threshold: %0.2f" % (gamma, ns, na, nt, thres)
     print "steps: %d, duration: %0.2f" % (res[0], res[1])
     return res
@@ -46,7 +46,7 @@ if __name__ == "__main__":
                     for th in thresholds:
                         for s_type in state_types:
                             result = experiment(demo_field, demo_pred, demo_prey, s_type, g, s, a, t, th)
-                            results.append((result, (s_type.__class__.__name__, g, s, a, t, th)))
+                            results.append((result, (s_type.__name__, g, s, a, t, th)))
                             demo_pred.x, demo_pred.y = 0, 0
                             demo_prey.x, demo_prey.y = 5, 5
     print results

@@ -74,8 +74,20 @@ class SamplingBasedFittedValueIteration(object):
         Z = [[self.get_value(self.env.state_type(self.env, Predator(self.env, X[j,i], Y[j,i]), self.env.state.prey)) for i in range(x.size)] for j in range(y.size)]
         fig = plt.figure()
         ax = fig.gca(projection='3d')
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('V')
         surf = ax.plot_surface(X, Y, Z, cmap=cm.get_cmap('Oranges'), linewidth=0)
-        plt.show()
+        title = self.env.state_type.__name__ +\
+                       " gamma:%0.2f, nStates:%d,\nnActions:%d, nTargets:%d,\nthreshold:%0.2f"\
+                       % (self.gamma, self.n_states, self.n_actions, self.n_targets, self.threshold)
+        filename = "output\\" + self.env.state_type.__name__ +\
+                       "_gamma%0.2f_nStates%d_nActions%d_nTargets%d_threshold%0.2f.png"\
+                       % (self.gamma, self.n_states, self.n_actions, self.n_targets, self.threshold)
+        plt.title(title)
+        # plt.draw()
+        # time.sleep(5)
+        plt.savefig(filename)
 
     def get_value(self, state):
         return np.dot(self.theta, state.phi())
