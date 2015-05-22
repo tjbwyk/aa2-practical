@@ -88,6 +88,7 @@ class SamplingBasedFittedValueIteration(object):
         # plt.draw()
         # time.sleep(5)
         plt.savefig(filename)
+        plt.clf()
 
     def get_value(self, state):
         return np.dot(self.theta, state.phi())
